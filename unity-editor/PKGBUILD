@@ -1,0 +1,83 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Oscar Morante <spacepluk at gmail dot com>
+
+# Unity for Linux release thread:
+# https://forum.unity.com/threads/unity-on-linux-release-notes-and-known-issues.350256/
+
+_version=2018.2.4
+_build=f1
+# _buildtag=20180814
+_randomstring=fe703c5165de
+_prefix=/opt/unity
+_unitydownloads="http://beta.unity3d.com/download/${_randomstring}"
+#_keepdownloads=yes
+
+# https://beta.unity3d.com/download/fe703c5165de/UnitySetup-2018.2.4f1
+pkgname=unity-editor
+pkgver=${_version}${_build}
+pkgrel=1
+section='devel'
+pkgdesc="Unity3D game engine and editor."
+read -r -d '' pkglong <<"EOF"
+The world's most popular development platform for creating 2D and 3D
+multiplatform games and interactive experiences.
+EOF
+arch=('x86_64')
+url='https://unity3d.com/'
+license=('custom')
+makedepends=('libcanberra-gtk-module')
+depends=('libc6'
+         'libfreeimage3'
+         'libgcc1'
+         'libgdk-pixbuf2.0-0'
+         'libgl1'
+         'libglib2.0-0'
+         'libglu1-mesa | libglu1'
+         'libgtk-3-0'
+         'libstdc++6'
+         'libx11-6'
+         'libxcursor1'
+         'libxrandr2')
+optdepends=('unity-editor-doc'
+            'unity-editor-android'
+            'unity-editor-ios'
+            'unity-editor-mac'
+            'unity-editor-webgl'
+            'unity-editor-windows'
+            'unity-editor-facebook')
+source=("${_unitydownloads}/UnitySetup-${_version}${_build}"
+        'unity-editor.desktop'
+        'unity-editor.png')
+sha1sums=('a1c6cca4876703bcfd4f8465e7def36a15804158'
+          '789e51bca2b2be44590b5c35b8e261f7e4c4c749'
+          'fddf4861974f88f0565de7f54f7418204e729894')
+
+unity-setup() {
+  export NO_AT_BRIDGE=1
+  "${srcdir}/UnitySetup-${_version}${_build}" \
+    --download-location="${srcdir}" \
+    --install-location="${pkgdir}/opt/unity" \
+    --verbose \
+    --unattended "$@"
+}
+
+prepare() {
+    chmod +x "${srcdir}/UnitySetup-${_version}${_build}"
+
+    msg2 "Extracting EULA..."
+    echo n | unity-setup | head -n -2 > "${srcdir}/EULA"
+}
+
+package() {
+    install -Dm644 "${srcdir}/EULA" "${docdir}/EULA"
+
+    msg2 "Extracting Unity..."
+    export NO_AT_BRIDGE=1
+    mkdir -p "${pkgdir}${_prefix}"
+    yes | unity-setup --components=Unity
+
+    install -Dm644 "${srcdir}/${pkgname}.desktop" \
+        "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+    install -dm755 "${pkgdir}/usr/bin"
+    ln -s "${pkgdir}/opt/unity/Editor/Unity" "${pkgdir}/usr/bin/${pkgname}"
+}

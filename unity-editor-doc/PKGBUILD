@@ -1,0 +1,40 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Oscar Morante <spacepluk at gmail dot com>
+
+# Unity for Linux release thread:
+# https://forum.unity.com/threads/unity-on-linux-release-notes-and-known-issues.350256/
+
+_version=2018.2.4
+_build=f1
+_randomstring=fe703c5165de
+_unitydownloads="http://beta.unity3d.com/download/${_randomstring}"
+
+pkgname=unity-editor-doc
+pkgver=${_version}${_build}
+pkgrel=1
+section='devel'
+pkgdesc="Unity3D game engine and editor (documentation)."
+read -r -d '' pkglong <<"EOF"
+Unity User Manual and Scripting API Reference.
+EOF
+arch=('amd64')
+url='https://unity3d.com/'
+license=('custom')
+makedepends=('libcanberra-gtk-module')
+depends=('unity-editor')
+source=("${_unitydownloads}/UnitySetup-${_version}${_build}")
+sha1sums=('a1c6cca4876703bcfd4f8465e7def36a15804158')
+
+prepare() {
+    chmod +x "${srcdir}/UnitySetup-${_version}${_build}"
+}
+
+package() {
+    export NO_AT_BRIDGE=1
+    mkdir -p "${pkgdir}${_prefix}"
+    yes | "${srcdir}/UnitySetup-${_version}${_build}" \
+      --download-location="${srcdir}" \
+      --install-location="${pkgdir}/opt/unity" \
+      --unattended \
+      --components=Documentation
+}
