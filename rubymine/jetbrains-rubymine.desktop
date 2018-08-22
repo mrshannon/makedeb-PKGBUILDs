@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=RubyMine
+Comment=The Most Intelligent Ruby and Rails IDE
+GenericName=rubymine
+Exec=rubymine
+Icon=rubymine
+Terminal=false
+Type=Application
+Categories=Development;IDE;Ruby
+StartupWMClass=jetbrains-rubymine

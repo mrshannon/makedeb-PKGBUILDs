@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=DataGrip
+Icon=datagrip
+Exec=datagrip %u
+Comment=IntelliJ-based IDE for databases and SQL
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-datagrip

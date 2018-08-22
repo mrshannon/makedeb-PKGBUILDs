@@ -1,0 +1,66 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Grey Christoforo <first name at last name dot net>
+# Contributor: Darcy Hu <hot123tea123@gmail.com>
+
+nolint=1
+pkgname=matlab
+release=R2018a
+pkgver=9.4.0
+pkgrel=1
+section='math'
+pkgdesc='High-level language for numerical computation and visualization'
+read -r -d '' pkglong <<"EOF"
+MATLAB is a multi-paradigm numerical computing environment and proprietary
+programming language developed by MathWorks.
+EOF
+arch='amd64'
+url='http://www.mathworks.com'
+license=(custom)
+source=("matlab_${release}_glnxa64.zip"
+        'matlab.png'
+        'matlab.desktop'
+        'matlab-cli')
+sha256sums=('03211538445e8e98c85c358aca74f1627cca2f83e3b5cd5499ecfbc1c3ff3abb'
+            'ebb5397b28cedae0f59cbcba608570c2907c4d43f01b1cb5baa2fae1b512a6c4'
+            '34fbca3d6bbeab0483055419b944fce1f1bcce3dc8c79d758eba83e0e8fdf16b'
+            'ed586434a60af5b1cf9416ed36b1e3770b41650bd9912b0d26ae0f612d625ef0')
+noextract=("matlab_${release}_glnxa64.zip")
+
+prepare() {
+    install -dm755 "${srcdir}/installer"
+    install -dm755 "${srcdir}/matlab"
+    bsdtar -xf "${srcdir}/matlab_${release}_glnxa64.zip" \
+        -C "${srcdir}/installer"
+    echo -e "\n\n\033[0;34m\033[1mInstall MATLAB ${release} to: \n\n${srcdir}/matlab\033[0m\n\n"
+    # "${srcdir}/installer/install" || exit 1
+}
+
+package() {
+
+    # install application
+    install -dm755 "${pkgdir}/opt/mathworks/${pkgname}"
+    tar -C "${srcdir}/matlab" -cf - . | tar -C "${pkgdir}/opt/mathworks/${pkgname}" -xf -
+
+    # make license directory writable
+    chmod a+w "${pkgdir}/opt/mathworks/${pkgname}/licenses"
+
+    # install docs
+    install -Dm644 "${srcdir}/matlab/MCR_license.txt" "${docdir}/MCR_license.txt"
+    install -Dm644 "${srcdir}/matlab/license_agreement.txt" "${docdir}/license_agreement.txt"
+    install -Dm644 "${srcdir}/matlab/trademarks.txt" "${docdir}/trademarks.txt"
+
+    # install binaries
+    install -Dm755 "${srcdir}/${pkgname}-cli" "${pkgdir}/usr/bin/${pkgname}-cli"
+    ln -s "/opt/mathworks/${pkgname}/bin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+    ln -s "/opt/mathworks/${pkgname}/bin/mcc" "${pkgdir}/usr/bin/${pkgname}-mcc"
+    ln -s "/opt/mathworks/${pkgname}/bin/mex" "${pkgdir}/usr/bin/${pkgname}-mex"
+    ln -s "/opt/mathworks/${pkgname}/bin/mbuild" "${pkgdir}/usr/bin/${pkgname}-mbuild"
+
+    # Install .desktop
+    install -Dm644 "${srcdir}/${pkgname}.desktop" \
+        "${pkgdir}/usr/share/applications/${pkgdir}.desktop"
+
+    # install icon
+    install -Dm644 "${srcdir}/${pkgname}.png" \
+        "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+}

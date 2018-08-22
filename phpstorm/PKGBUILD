@@ -1,0 +1,89 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Frederik Schwan <frederik dot schwan at linux dot com>
+# Contributor: Vlad M. <vlad@archlinux.net>
+# Contributor: Attila Bukor <r1pp3rj4ck[at]w4it[dot]eu>
+# Contributor: D. Can Celasun <dcelasun[at]gmail[dot]com>
+# Contributor: Slava Volkov <sv99sv[at]gmail[dot]com>
+
+nolint=1
+_pkgname=PhpStorm
+pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
+pkgver=2018.2.1
+_pkgver=182.3911.43
+pkgrel=1
+section='devel'
+pkgdesc='PHP IDE for Professional Development'
+read -r -d '' pkglong <<"EOF"
+PhpStorm is a PHP IDE that actually ‘gets’ your code. It supports PHP 5.3-7.2,
+provides on-the-fly error prevention, best autocompletion & code refactoring,
+zero configuration debugging, and an extended HTML, CSS, and JavaScript editor.
+EOF
+arch=('amd64')
+license=('Commercial')
+url='https://www.jetbrains.com/phpstorm/'
+depends=('default-jre | java-runtime')
+source=("https://download.jetbrains.com/webide/${_pkgname}-${pkgver}.tar.gz"
+        'jetbrains-phpstorm.desktop')
+sha256sums=('d53a7f4646efa21e25b17ed55956db91a9a18de47139bc1a23b86c4267835810'
+            'aabe9170734fb04bb1cce27ac95b6ee69ed665be4d3ea87e5284ee69da6d9ea2')
+
+prepare() {
+  # remove other architectures
+  rm -rf "${srcdir}/${_pkgname}-${pkgver}/bin/fsnotifier"
+  rm -rf "${srcdir}/${_pkgname}-${pkgver}/bin/fsnotifier-arm"
+  rm -rf "${srcdir}/${_pkgname}-${pkgver}/lib/libpty/linux/x86"
+}
+
+package() {
+
+    # install phpstorm
+    install -dm755 "${pkgdir}/opt/jetbrains/${pkgname}"
+    tar -C "${srcdir}/${_pkgname}-${_pkgver}" -cf - \
+        . | tar -C "${pkgdir}/opt/jetbrains/${pkgname}" -xf -
+
+    # install binary
+    install -dm755 "${pkgdir}/usr/bin/"
+    ln -s "/opt/jetbrains/${pkgname}/bin/${pkgname}.sh" \
+            "${pkgdir}/usr/bin/${pkgname}"
+
+    # install .desktop
+    install -Dm644 "${srcdir}/jetbrains-${pkgname}.desktop" \
+            "${pkgdir}/usr/share/applications/jetbrains-${pkgname}.desktop"
+
+    # install icon
+    install -Dm644 "${srcdir}/${_pkgname}-${_pkgver}/bin/${pkgname}.png" \
+            "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+    # install docs
+    install -dm755 "${docdir}"
+    tar -C "${srcdir}/${_pkgname}-${_pkgver}/license/" -cf - \
+        . | tar -C "${docdir}/" -xf -
+}
+
+
+
+
+
+
+
+package_phpstorm() {
+  optdepends=('phpstorm-jre: JetBrains custom Java Runtime (Recommended)'
+              'java-runtime: JRE - Required if phpstorm-jre is not installed'
+              'gnome-keyring: save login/deployment credentials safely')
+
+  install -d -m 755 "${pkgdir}/opt/"
+  install -d -m 755 "${pkgdir}/usr/bin/"
+  install -d -m 755 "${pkgdir}/usr/share/applications/"
+  install -d -m 755 "${pkgdir}/usr/share/pixmaps/"
+
+  rsync -rtl "${srcdir}/PhpStorm-${_pkgver}/" "${pkgdir}/opt/${pkgbase}" --exclude=/jre64
+
+  ln -s "/opt/${pkgbase}/bin/${pkgbase}.sh" "${pkgdir}/usr/bin/${pkgbase}"
+  install -D -m 644 "${srcdir}/jetbrains-${pkgbase}.desktop" "${pkgdir}/usr/share/applications/"
+  install -D -m 644 "${pkgdir}/opt/${pkgbase}/bin/${pkgbase}.png" "${pkgdir}/usr/share/pixmaps/${pkgbase}.png"
+}
+
+package_phpstorm-jre() {
+  install -d -m 755 "${pkgdir}/opt/${pkgbase}"
+  rsync -rtl "${srcdir}/PhpStorm-${_pkgver}/jre64" "${pkgdir}/opt/${pkgbase}"
+}

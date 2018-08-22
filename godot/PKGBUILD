@@ -1,0 +1,95 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Jorge Araya Navarro <jorge@esavara.cr>
+# Contributor: Cristian Porras <porrascristian@gmail.com>
+# Contributor: Matthew Bentley <matthew@mtbentley.us>
+
+pkgname=godot
+pkgver=3.0.6
+pkgrel=1
+section='devel'
+pkgdesc="An advanced, feature packed, multi-platform 2D and 3D game engine"
+read -r -d '' pkglong <<"EOF"
+Godot Engine is a feature-packed, cross-platform game engine to create 2D and
+3D games from a unified interface. It provides a comprehensive set of common
+tools, so that users can focus on making games without having to reinvent the
+wheel. Games can be exported in one click to a number of platforms, including
+the major desktop platforms (Linux, Mac OSX, Windows) as well as mobile
+(Android, iOS) and web-based (HTML5) platforms.  This is the GDScript version
+of Godot Engine.
+EOF
+url="http://www.godotengine.org"
+license=('MIT')
+arch=('amd64')
+makedepends=('build-essential'
+             'scons'
+             'pkg-config'
+             'libx11-dev'
+             'libxcursor-dev'
+             'libxinerama-dev'
+             'libgl1-mesa-dev'
+             'libglu1-mesa-dev'
+             'libasound2-dev'
+             'libpulse-dev'
+             'libfreetype6-dev'
+             'libssl-dev'
+             'libudev-dev'
+             'libxi-dev'
+             'libxrandr-dev'
+             'libudev-dev'
+             'yasm')
+depends=('libasound2'
+         'libc6'
+         'libfreetype6'
+         'libgcc1'
+         'libgl1'
+         'libpng16-16'
+         'libpulse0'
+         'libssl1.1'
+         'libstdc++6'
+         'libx11-6'
+         'libxcursor1'
+         'libxi6'
+         'libxinerama1'
+         'libxrandr2'
+         'zlib1g')
+optdepends=('godot-export-templates')
+conflicts=('godot-bin')
+
+source=(
+  "https://github.com/godotengine/godot/archive/${pkgver}-stable.tar.gz"
+)
+sha256sums=('50431e021ee5ec21002cc23435f530f8fde518c6eb7085c9f7f1027abaae2581')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}-stable"
+  scons platform=x11 target=release_debug udev=yes
+}
+
+package() {
+
+    # install binary
+    install -Dm755 "${srcdir}/${pkgname}-${pkgver}-stable/bin/godot.x11.opt.tools.64" \
+        "${pkgdir}/usr/bin/godot"
+
+    # install icon
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/icon.svg" \
+        "${pkgdir}/usr/share/pixmaps/${pkgname}.svg"
+
+    # install .desktop
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/misc/dist/linux/${pkgname}.desktop" \
+        "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+    # install manpage
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/misc/dist/linux/${pkgname}.6" \
+        "${pkgdir}/usr/share/man/man6/${pkgname}.6"
+    gzip -9 "${pkgdir}/usr/share/man/man6/${pkgname}.6"
+
+    # install docs
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/AUTHORS.md" "${docdir}/AUTHORS.md"
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/CHANGELOG.md" "${docdir}/CHANGELOG.md"
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/COPYRIGHT.txt" "${docdir}/COPYRIGHT.txt"
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/LICENSE.txt" "${docdir}/LICENSE.txt"
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/LOGO_LICENSE.md" "${docdir}/LOGO_LICENSE.md"
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}-stable/README.md" "${docdir}/README.md"
+
+}

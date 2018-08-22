@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=WebStorm
+Icon=webstorm
+Exec=webstorm %u
+Comment=Powerful IDE for modern JavaScript development
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-webstorm

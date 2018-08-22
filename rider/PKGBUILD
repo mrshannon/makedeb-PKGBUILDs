@@ -1,0 +1,56 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Tim Hellhake
+
+nolint=1
+pkgname=rider
+pkgver='2018.1.4'
+pkgrel=1
+pkgdesc='Cross-platform C# IDE by JetBrains'
+read -r -d '' pkglong <<"EOF"
+.NET IDE based on the IntelliJ platform and ReSharper. Supports C#, ASP.NET,
+ASP.NET MVC, .NET Core, Unity and Xamarin
+EOF
+arch=('amd64')
+url='https://www.jetbrains.com/rider/'
+license=('Commercial')
+depends=('default-jre | java-runtime')
+optdepends=('mono-dev' 'mono-complete' 'mono-dbg')
+provides=('rider')
+conflicts=('rider')
+source=("https://download.jetbrains.com/rider/JetBrains.Rider-${pkgver}.tar.gz"
+        "jetbrains-${pkgname}.desktop")
+sha256sums=('0be8602c0d3c89b7d73804ea04821ed46daf17ce098f16584beb504f5dc75af7'
+            '23360ab0dc1976a0b3d59f473182ee57cf52852ad2d7c8e11ef96512e4650949')
+
+prepare() {
+  # remove other architectures
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/bin/fsnotifier"
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/bin/fsnotifier-arm"
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/lib/libpty/linux/x86"
+}
+
+package() {
+
+    # install rider
+    install -dm755 "${pkgdir}/opt/jetbrains/${pkgname}"
+    tar -C "${srcdir}/JetBrains Rider-${pkgver}" -cf - \
+        . | tar -C "${pkgdir}/opt/jetbrains/${pkgname}" -xf -
+
+    # install binary
+    install -dm755 "${pkgdir}/usr/bin/"
+    ln -s "/opt/jetbrains/${pkgname}/bin/${pkgname}.sh" \
+            "${pkgdir}/usr/bin/${pkgname}"
+
+    # install .desktop
+    install -Dm644 "${srcdir}/jetbrains-${pkgname}.desktop" \
+            "${pkgdir}/usr/share/applications/jetbrains-${pkgname}.desktop"
+
+    # install icon
+    install -Dm644 "${srcdir}/JetBrains Rider-${pkgver}/bin/${pkgname}.png" \
+            "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+    # install docs
+    install -dm755 "${docdir}"
+    tar -C "${srcdir}/JetBrains Rider-${pkgver}/license/" -cf - \
+        . | tar -C "${docdir}/" -xf -
+}

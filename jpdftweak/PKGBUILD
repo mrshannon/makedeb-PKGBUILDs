@@ -1,0 +1,49 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Lukas Jirkovsky <l.jirkovsky@gmail.com>
+pkgname=jpdftweak
+pkgver=1.1
+pkgrel=2
+section='text'
+pkgdesc="Swiss Army Knife GUI application for PDF documents"
+read -r -d '' pkglong <<"EOF"
+jPDF Tweak is a Java Swing application that can combine, split, rotate,
+reorder, watermark, encrypt, sign, and otherwise tweak PDF files.
+EOF
+arch=('any')
+url="http://jpdftweak.sourceforge.net/"
+license=('AGPL3')
+depends=('default-jre | java-runtime'
+         'hicolor-icon-theme')
+install=jpdftweak.install
+source=("http://downloads.sourceforge.net/jpdftweak/${pkgname}-compact-${pkgver}.zip"
+        'jpdftweak.sh'
+        'jpdftweak.desktop')
+md5sums=('a497589cc75b47e8f8b3e7cf22343a31'
+         '8b129e219ecd593b4f8a178f2e275d23'
+         '8c62361be9a7de12f86593b7e7111c22')
+
+package() {
+    cd "$srcdir"
+
+    # install jar
+    install -dm755 "${pkgdir}/usr/share/java/${pkgname}"
+    install -Dm644 "${pkgname}.jar" "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
+
+    # install binary
+    install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+
+    # install .desktop
+    install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+    # install the manual
+    install -dm755 "${docdir}/manual"
+    for file in manual/*; do
+        install -Dm644 "${file}" "${docdir}/${file}"
+    done
+
+    # install icons
+    for ICON in icons/*; do
+      RES=$(echo "$ICON" | tr -cd '[:digit:]')
+      install -Dm644 "$ICON" "${pkgdir}/usr/share/icons/hicolor/${RES}x${RES}/apps/${pkgname}.png"
+    done
+}

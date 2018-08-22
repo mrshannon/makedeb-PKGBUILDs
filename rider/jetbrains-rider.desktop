@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=
+Type=Application
+Name=Rider
+Icon=rider
+Exec=rider %u
+Comment=Cross-platform C# IDE by JetBrains
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-rider

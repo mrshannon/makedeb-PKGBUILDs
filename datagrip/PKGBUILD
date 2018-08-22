@@ -1,0 +1,59 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Frederik Schwan <frederik dot schwan at linux dot com>
+
+nolint=1
+_pkgname=DataGrip
+pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
+pkgver=2018.2.2
+pkgrel=1
+section='devel'
+pkgdesc='IntelliJ-based IDE for databases and SQL'
+read -r -d '' pkglong <<"EOF"
+DataGrip is the multi-engine database environment. We support MySQL,
+PostgreSQL, Microsoft SQL Server, Microsoft Azure, Oracle, Amazon Redshift,
+Sybase, DB2, SQLite, HyperSQL, Apache Derby and H2. If a DBMS has a JDBC driver
+you can connect to it via DataGrip. For any of supported engines it provides
+database introspection and various instruments for creating and modifying
+objects.
+EOF
+arch=('amd64')
+url='http://www.jetbrains.com/datagrip/'
+license=('Commercial')
+depends=('default-jre | java-runtime')
+source=("https://download.jetbrains.com/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        'jetbrains-datagrip.desktop')
+sha256sums=('49adf68b5c10fb68cf3eea6afeabac4c624ca8771fd9e642e71f16cc96a1cc69'
+            '12ffc941fc4fd64c84d4cb925c7de370241caa9de303177be4283e27574261ef')
+
+prepare() {
+  # remove other architectures
+  rm -rf "${srcdir}/${_pkgname}-${pkgver}/bin/fsnotifier"
+  rm -rf "${srcdir}/${_pkgname}-${pkgver}/bin/fsnotifier-arm"
+  rm -rf "${srcdir}/${_pkgname}-${pkgver}/lib/libpty/linux/x86"
+}
+
+package() {
+
+    # install datagrip
+    install -dm755 "${pkgdir}/opt/jetbrains/${pkgname}"
+    tar -C "${srcdir}/${_pkgname}-${pkgver}" -cf - \
+        . | tar -C "${pkgdir}/opt/jetbrains/${pkgname}" -xf -
+
+    # install binary
+    install -dm755 "${pkgdir}/usr/bin/"
+    ln -s "/opt/jetbrains/${pkgname}/bin/${pkgname}.sh" \
+            "${pkgdir}/usr/bin/${pkgname}"
+
+    # install .desktop
+    install -Dm644 "${srcdir}/jetbrains-${pkgname}.desktop" \
+            "${pkgdir}/usr/share/applications/jetbrains-${pkgname}.desktop"
+
+    # install icon
+    install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/bin/${pkgname}.png" \
+            "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+    # install docs
+    install -dm755 "${docdir}"
+    tar -C "${srcdir}/${_pkgname}-${pkgver}/license/" -cf - \
+        . | tar -C "${docdir}/" -xf -
+}

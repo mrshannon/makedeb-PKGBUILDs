@@ -1,0 +1,64 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Michael Hansen <zrax0111 gmail com>
+# Contributor: Raphaël Doursenaud <rdoursenaud@gpcsolutions.fr>
+# Contributor: Jesse Jaara <gmail.com: jesse.jaara>
+
+nolint=1
+_pkgname=CLion
+pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
+pkgver=2018.2.1
+pkgrel=1
+section='devel'
+pkgdesc="Cross-platform IDE for C and C++"
+read -r -d '' pkglong <<"EOF"
+CLion is a cross-platform IDE which natively supports C and C++, libc++ and
+Boost. It offers instant navigation to a symbol's declaration or usages, code
+generation for constructors/destructors, operators and more. There are dozens
+of refactorings, code analysis (including Data Flow Analysis and Clang-Tidy
+integration) and integration with GDB and LLDB. CLion uses the well-known CMake
+build system, supports Google test, Boost.Test, and Catch unit testing. There
+is Doxygen for documenting the code, Valgrind Memcheck for memory profiling,
+and support for all the popular Version Control Systems, it can even provide a
+VIM-emulation mode via a plugin.
+EOF
+arch=('amd64')
+url="http://www.jetbrains.com/${pkgname}"
+license=('custom')
+depends=('default-jre | java-runtime' 'build-essential')
+source=("https://download.jetbrains.com/cpp/${_pkgname}-${pkgver}.tar.gz"
+        "jetbrains-${pkgname}.desktop")
+sha256sums=('986956c4dee1bc1b930bfcf4b68d3f097493f481d0f4820eeaef4f0bcc29d999'
+            'b0e740ee04c2b3998652888e601f539b4024d561c1fb571d87ed86d42bbc052e')
+
+prepare() {
+  # remove other architectures
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/bin/fsnotifier"
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/bin/fsnotifier-arm"
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/lib/libpty/linux/x86"
+}
+
+package() {
+
+    # install clion
+    install -dm755 "${pkgdir}/opt/jetbrains/${pkgname}"
+    tar -C "${srcdir}/${pkgname}-${pkgver}" -cf - \
+        . | tar -C "${pkgdir}/opt/jetbrains/${pkgname}" -xf -
+
+    # install binary
+    install -dm755 "${pkgdir}/usr/bin/"
+    ln -s "/opt/jetbrains/${pkgname}/bin/${pkgname}.sh" \
+            "${pkgdir}/usr/bin/${pkgname}"
+
+    # install .desktop
+    install -Dm644 "${srcdir}/jetbrains-${pkgname}.desktop" \
+            "${pkgdir}/usr/share/applications/jetbrains-${pkgname}.desktop"
+
+    # install icon
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}/bin/${pkgname}.svg" \
+            "${pkgdir}/usr/share/pixmaps/${pkgname}.svg"
+
+    # install docs
+    install -dm755 "${docdir}"
+    tar -C "${srcdir}/${pkgname}-${pkgver}/license/" -cf - \
+        . | tar -C "${docdir}/" -xf -
+}

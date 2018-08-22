@@ -1,0 +1,65 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Mario Finelli <mario at finel dot li>
+# Contributor: Tom Richards <tom at tomrichards dot net>
+# Contributor: Alexsandr Pavlov <kidoz at mail dot ru>
+# Contributor: Ernie Brodeur <ebrodeur at ujami dotnet>
+# Contributor: Rogof <fake dot bios at gmail dot com>
+# Contributor: m4.rc0 <m4 dot rc0 at o2 dot pl>
+
+nolint=1
+_pkgname=RubyMine
+pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
+pkgver=2018.2.1
+pkgrel=1
+section='devel'
+pkgdesc="The Most Intelligent Ruby and Rails IDE"
+read -r -d '' pkglong <<"EOF"
+RubyMine is a dedicated Ruby and Rails development environment. The IDE
+provides a wide range of essential tools for Ruby developers, tightly
+integrated together to create a convenient environment for productive Ruby
+development and Web development with Ruby on Rails.
+EOF
+arch=('amd64')
+options=(!strip)
+url="https://www.jetbrains.com/ruby/"
+license=('custom')
+depends=('default-jre | java-runtime' 'build-essential')
+optdepends=('ruby')
+source=("https://download.jetbrains.com/ruby/${_pkgname}-${pkgver}.tar.gz"
+        "jetbrains-${pkgname}.desktop")
+sha256sums=('0fc3455c6967781cf264ef66df59c97f97409e15c9f600472c9c11fd64538cbf'
+            'ec0723a345ff62902c1a08a7c44c3a5c6340af50fb3a454d297a97b5f313f695')
+
+prepare() {
+  # remove other architectures
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/bin/fsnotifier"
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/bin/fsnotifier-arm"
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/lib/libpty/linux/x86"
+}
+
+
+package() {
+
+    # install rubymine
+    install -dm755 "${pkgdir}/opt/jetbrains/${pkgname}"
+    tar -C "${srcdir}/${_pkgname}-${pkgver}" -cf - \
+        . | tar -C "${pkgdir}/opt/jetbrains/${pkgname}" -xf -
+
+    # install binary
+    install -dm755 "${pkgdir}/usr/bin/"
+    ln -s "/opt/jetbrains/${pkgname}/bin/${pkgname}.sh" \
+            "${pkgdir}/usr/bin/${pkgname}"
+
+    # install .desktop
+    install -Dm644 "${srcdir}/jetbrains-${pkgname}.desktop" \
+            "${pkgdir}/usr/share/applications/jetbrains-${pkgname}.desktop"
+
+    # install icon
+    install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/bin/${pkgname}.png" \
+            "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+    # install docs
+    install -dm755 "${docdir}"
+    tar -C "${srcdir}/${_pkgname}-${pkgver}/license/" -cf - \
+        . | tar -C "${docdir}/" -xf -
+}

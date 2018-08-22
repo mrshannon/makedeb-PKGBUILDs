@@ -1,0 +1,63 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Frederik Schwan <frederik dot schwan at linux dot com>
+# Contributor: Pablo Vilas <pablovilas89 at gmail dot com>
+# Contributor: Testuser_01 <arch@nico-siebler.de>
+
+nolint=1
+_pkgname=WebStorm
+pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
+pkgver=2018.2.1
+_pkgver=182.3911.37
+pkgrel=1
+section='devel'
+pkgdesc='Powerful IDE for modern JavaScript development'
+read -r -d '' pkglong <<"EOF"
+WebStorm is a powerful commercial IDE for modern JavaScript development.
+Whether you’re using JavaScript or TypeScript, Angular, React or Vue.js,
+WebStorm provides you with the best code completion, navigation, refactoring
+tools and on-the-fly code analysis. You can run, debug and test your web,
+Node.js, React Native and Electron apps right in the IDE. Tools such as
+linters, task runner and version control are seamlessly integrated and
+available out of the box.
+EOF
+arch=('amd64')
+url='https://www.jetbrains.com/webstorm/'
+license=('Commercial')
+depends=('default-jre | java-runtime' 'build-essential')
+source=(https://download.jetbrains.com/webstorm/WebStorm-${pkgver}.tar.gz
+        jetbrains-webstorm.desktop)
+sha256sums=('ad4318bfe9679310377888d8ed85aa927beb9ea85f6bb6262a96583cc29d7fc9'
+            '55180f9760c3c032d6114d581b422d5163edeafeabbf6327ce8e208e7d9070a1')
+
+prepare() {
+  # remove other architectures
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/bin/fsnotifier"
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/bin/fsnotifier-arm"
+  rm -rf "${srcdir}/${pkgname}-${pkgver}/lib/libpty/linux/x86"
+}
+
+package() {
+
+    # install webstorm
+    install -dm755 "${pkgdir}/opt/jetbrains/${pkgname}"
+    tar -C "${srcdir}/${_pkgname}-${_pkgver}" -cf - \
+        . | tar -C "${pkgdir}/opt/jetbrains/${pkgname}" -xf -
+
+    # install binary
+    install -dm755 "${pkgdir}/usr/bin/"
+    ln -s "/opt/jetbrains/${pkgname}/bin/${pkgname}.sh" \
+            "${pkgdir}/usr/bin/${pkgname}"
+
+    # install .desktop
+    install -Dm644 "${srcdir}/jetbrains-${pkgname}.desktop" \
+            "${pkgdir}/usr/share/applications/jetbrains-${pkgname}.desktop"
+
+    # install icon
+    install -Dm644 "${srcdir}/${_pkgname}-${_pkgver}/bin/${pkgname}.png" \
+            "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+    # install docs
+    install -dm755 "${docdir}"
+    tar -C "${srcdir}/${_pkgname}-${_pkgver}/license/" -cf - \
+        . | tar -C "${docdir}/" -xf -
+}

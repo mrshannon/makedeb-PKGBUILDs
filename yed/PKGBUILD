@@ -1,0 +1,57 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Michael Lass <bevan@bi-co.net>
+# Contributor: Sebastian Wolf < sebastian at melonkru dot de >
+# Contributor: gost < gostrc at gmail dot com >
+# Contributor: Mikolaj Pastuszko <deluminathor@gmail.com>
+# Contributor: Stefan Seemayer < mail at semicolonsoftware dot de >
+# Contributor: Gordin < 9ordin @t gmail dot com >
+# Contributor: David Davis < davisd<a@t>davisd.com >
+
+pkgname=yed
+pkgver=3.18.1.1
+pkgrel=1
+epoch=1
+section='graphics'
+pkgdesc='Very powerful graph editor written in java'
+read -r -d '' pkglong <<"EOF"
+yEd is a powerful desktop application that can be used to quickly and
+effectively generate high-quality diagrams.  Create diagrams manually, or
+import your external data for analysis. Our automatic layout algorithms
+arrange even large data sets with just the press of a button.
+EOF
+arch=('any')
+url='http://www.yworks.com/en/products_yed_about.html'
+license=('custom')
+depends=('openjdk-8-jre'
+         'openjfx')
+source=("https://www.yworks.com/resources/yed/demo/yEd-${pkgver}.zip"
+        'https://www.yworks.com/assets/images/logos/y-flat.png'
+        'yed.desktop'
+        'yed')
+sha256sums=('fe24fb59a537c2cc03e8a3d78d87f10c6d81714371be5ed40cc2d7295160804a'
+            '2b411ac39175cdf210900c033ad35063925fd17c10b7b4303fccb12b9398ac13'
+            '342dba6defac88d035253b22e6377d9570858f59367cd486dba4a4dba1621f91'
+            'dc193379e3bcc3976371a248a082b7f2a7cff610fcbc0064b12997edf5def66d')
+
+install=${pkgname}.install
+
+package() {
+  # Install jars
+  install -Dm644 ${srcdir}/yed-${pkgver}/yed.jar ${pkgdir}/usr/share/java/yed/yed.jar
+  install -dm755 ${pkgdir}/usr/share/java/yed/lib
+  install -m644 ${srcdir}/yed-${pkgver}/lib/* ${pkgdir}/usr/share/java/yed/lib/
+
+  # Install license
+  install -dm755 ${docdir}
+  install -Dm644 ${srcdir}/yed-${pkgver}/license.html ${docdir}/license.html
+  install -Dm644 ${srcdir}/yed-${pkgver}/thirdpartylicenses.html ${docdir}/thirdpartylicenses.html
+
+  # Install icon
+  install -Dm644 ${srcdir}/y-flat.png ${pkgdir}/usr/share/pixmaps/yed.png
+
+  # Install .desktop file
+  install -Dm644 ${srcdir}/yed.desktop ${pkgdir}/usr/share/applications/yed.desktop
+
+  # Install run script
+  install -Dm755 ${srcdir}/yed ${pkgdir}/usr/bin/yed
+}

@@ -1,0 +1,47 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: zoe <chp321 AT gmail DOT com>
+# Contributor: Luca Bennati <lucak3 AT gmail DOT com>
+
+pkgname=jpdfbookmarks
+pkgver=2.5.2
+pkgrel=1
+section='text'
+pkgdesc="Java PDF bookmarks editor"
+read -r -d '' pkglong <<"EOF"
+This software allows you to create and edit bookmarks on existing pdf files.
+EOF
+arch=('any')
+url="http://flavianopetrocchi.blogspot.com/"
+license=('GPL3')
+depends=('default-jre | java-runtime'
+         'hicolor-icon-theme')
+source=("http://downloads.sf.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        'jpdfbookmarks.desktop')
+md5sums=('035c9cb2f828891cf0bea37323968f7a'
+         '0d3d8e406fde4f9cdcb410a241a309b9')
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+
+    # install jars
+    install -dm755 "${pkgdir}/usr/share/java/${pkgname}/lib/"
+    install -Dm644 lib/* "${pkgdir}/usr/share/java/${pkgname}/lib/"
+    install -Dm644 jpdfbookmarks.jar "${pkgdir}/usr/share/java/${pkgname}/"
+    install -DTm755 link_this_in_linux_path.sh "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.sh"
+    install -DTm755 link_this_in_linux_path_cli.sh "${pkgdir}/usr/share/java/${pkgname}/${pkgname}_cli.sh"
+
+    # install icon
+    install -DTm644 jpdfbookmarks.png "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${pkgname}.png"
+
+    # install .desktop
+    install -DTm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+    # install docs
+    install -dm755 "${docdir}"
+    install -Dm644 README "${docdir}/README"
+
+    # install scripts
+    install -dm755 "${pkgdir}/usr/bin/"
+    ln -s "../share/java/${pkgname}/jpdfbookmarks.sh" "${pkgdir}/usr/bin/jpdfbookmarks"
+    ln -s "../share/java/${pkgname}/jpdfbookmarks_cli.sh" "${pkgdir}/usr/bin/jpdfbookmarks-cli"
+}
