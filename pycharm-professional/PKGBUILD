@@ -5,7 +5,7 @@ nolint=1
 _pkgname=pycharm
 pkgname=pycharm-professional
 pkgver=2018.2.1
-pkgrel=1
+pkgrel=2
 section='devel'
 pkgdesc="Python IDE for Professional Developers"
 read -r -d '' pkglong <<"EOF"
@@ -62,7 +62,7 @@ package() {
 
     # install binary
     install -dm755 "${pkgdir}/usr/bin/"
-    ln -s "/opt/jetbrains/${pkgname}/bin/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+    ln -s "/opt/jetbrains/${pkgname}/bin/pycharm.sh" "${pkgdir}/usr/bin/${pkgname}"
 
     # install .desktop
     install -Dm644 "${srcdir}/jetbrains-pycharm.desktop" \
