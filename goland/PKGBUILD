@@ -4,7 +4,7 @@
 nolint=1
 _pkgname=GoLand
 pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
-pkgver=2018.2.1
+pkgver=2018.2.2
 pkgrel=1
 section='devel'
 pkgdesc='Capable and Ergonomic Go IDE'
@@ -18,7 +18,7 @@ url='https://www.jetbrains.com/go/'
 license=('Commercial')
 source=("https://download.jetbrains.com/go/${pkgname}-${pkgver}.tar.gz"
         "jetbrains-goland.desktop")
-sha256sums=('2a0ad5676215738961f8a4c448459d5370427b23b5f8d593ee6ff6c500d8264d'
+sha256sums=('32b35eb30e2bec3278c51ee2a5a5062348ee81ba64e3aca0614605c05d9ad583'
             '2f1ffecf1811b3c9ae52fae5ec9ecc17e828aace6f044d65cdeb35d75e4e38d1')
 
 prepare() {

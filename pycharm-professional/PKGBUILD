@@ -4,7 +4,7 @@
 nolint=1
 _pkgname=pycharm
 pkgname=pycharm-professional
-pkgver=2018.2.1
+pkgver=2018.2.2
 pkgrel=3
 section='devel'
 pkgdesc="Python IDE for Professional Developers"
@@ -35,7 +35,7 @@ optdepends=('ipython'
             'jupyter')
 source=("https://download.jetbrains.com/python/${pkgname}-${pkgver}.tar.gz"
         'jetbrains-pycharm.desktop')
-sha256sums=('ce7313f337b7c20b120a9986cc6d9163ebbc2ef4e9f4743cd057f0730a4d8ec0'
+sha256sums=('e7ce851728c411ff2112b82bfabbcb8d20d0433a8d7ce06887588cb278f8c8b1'
             'bf2250e1ce06cddb8deec31a51e8197c87adbf62462318cd288077554c39fa09')
 
 prepare() {

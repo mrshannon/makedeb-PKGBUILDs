@@ -6,8 +6,8 @@
 nolint=1
 _pkgname=WebStorm
 pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
-pkgver=2018.2.1
-_pkgver=182.3911.37
+pkgver=2018.2.2
+_pkgver=182.4129.32
 pkgrel=1
 section='devel'
 pkgdesc='Powerful IDE for modern JavaScript development'
@@ -26,7 +26,7 @@ license=('Commercial')
 depends=('default-jre | java-runtime' 'build-essential')
 source=(https://download.jetbrains.com/webstorm/WebStorm-${pkgver}.tar.gz
         jetbrains-webstorm.desktop)
-sha256sums=('ad4318bfe9679310377888d8ed85aa927beb9ea85f6bb6262a96583cc29d7fc9'
+sha256sums=('9943b20fb4fa6552ca0537cfdcd061f1075a517a4c5823d155309297f9c161a8'
             '55180f9760c3c032d6114d581b422d5163edeafeabbf6327ce8e208e7d9070a1')
 
 prepare() {
