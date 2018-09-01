@@ -2,7 +2,7 @@
 # Contributor: Urs Wolfer <uwolfer @ fwo.ch>
 
 nolint=1
-pkgname=intellij-idea-ultimate
+pkgname=intellij-idea
 pkgver=2018.2.2
 _buildver=182.4129.33
 pkgrel=1
@@ -25,7 +25,7 @@ depends=('default-jre | java-runtime')
 source=("https://download.jetbrains.com/idea/ideaIU-${pkgver}.tar.gz"
         "jetbrains-idea.desktop")
 sha256sums=('fc76938e9824330a80e8f7e42f4e71f62aef5aa6a806e8e4894ccb58f980f190'
-            '7c45ec2844557c1a631f819019730e45d2208ee729be46b6691db7d5ff978b48')
+            'c0fa5e94568fae54b07a1e57be5d7faf428a81cde02fd2a5cf72676223078967')
 
 prepare() {
   # remove other architectures

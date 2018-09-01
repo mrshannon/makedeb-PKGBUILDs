@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=IntelliJ IDEA Ultimate
+Name=IntelliJ IDEA
 Comment=Capable & Ergonomic Java IDE for Enterprise, Web & Mobile Development
-Exec=intellij-idea-ultimate %u
-Icon=intellij-idea-ultimate
+Exec=intellij-idea %u
+Icon=intellij-idea
 Terminal=false
 StartupWMClass=jetbrains-idea
 Type=Application
