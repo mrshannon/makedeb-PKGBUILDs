@@ -4,13 +4,10 @@
 # Unity for Linux release thread:
 # https://forum.unity.com/threads/unity-on-linux-release-notes-and-known-issues.350256/
 
-_version=2018.2.4
+_version=2018.2.7
 _build=f1
-# _buildtag=20180814
-_randomstring=fe703c5165de
+_randomstring=4ebd28dd9664
 _prefix=/opt/unity
-_unitydownloads="http://beta.unity3d.com/download/${_randomstring}"
-#_keepdownloads=yes
 
 # https://beta.unity3d.com/download/fe703c5165de/UnitySetup-2018.2.4f1
 pkgname=unity-editor
@@ -45,39 +42,24 @@ optdepends=('unity-editor-doc'
             'unity-editor-webgl'
             'unity-editor-windows'
             'unity-editor-facebook')
-source=("${_unitydownloads}/UnitySetup-${_version}${_build}"
+source=("https://download.unity3d.com/download_unity/${_randomstring}/LinuxEditorInstaller/Unity.tar.xz"
         'unity-editor.desktop'
         'unity-editor.png')
-sha1sums=('a1c6cca4876703bcfd4f8465e7def36a15804158'
+sha1sums=('4b7e07b42e7d1731692d1103b9e19cf346289626'
           '789e51bca2b2be44590b5c35b8e261f7e4c4c749'
           'fddf4861974f88f0565de7f54f7418204e729894')
 
-unity-setup() {
-  export NO_AT_BRIDGE=1
-  "${srcdir}/UnitySetup-${_version}${_build}" \
-    --download-location="${srcdir}" \
-    --install-location="${pkgdir}/opt/unity" \
-    --verbose \
-    --unattended "$@"
-}
-
-prepare() {
-    chmod +x "${srcdir}/UnitySetup-${_version}${_build}"
-
-    msg2 "Extracting EULA..."
-    echo n | unity-setup | head -n -2 > "${srcdir}/EULA"
-}
-
 package() {
-    install -Dm644 "${srcdir}/EULA" "${docdir}/EULA"
+    # install Unity editor
+    install -dm755 "${pkgdir}/${_prefix}/Editor"
+    tar -C "${srcdir}/Editor" -cf - \
+        . | tar -C "${pkgdir}/${_prefix}/Editor" -xf -
 
-    msg2 "Extracting Unity..."
-    export NO_AT_BRIDGE=1
-    mkdir -p "${pkgdir}${_prefix}"
-    yes | unity-setup --components=Unity
-
+    # install .desktop file
     install -Dm644 "${srcdir}/${pkgname}.desktop" \
         "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+    # install binary
     install -dm755 "${pkgdir}/usr/bin"
     ln -s "${pkgdir}/opt/unity/Editor/Unity" "${pkgdir}/usr/bin/${pkgname}"
 }
