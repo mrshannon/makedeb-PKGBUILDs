@@ -4,8 +4,8 @@
 
 nolint=1
 pkgname=matlab
-release=R2018a
-pkgver=9.4.0
+release=R2018b
+pkgver=9.5.0
 pkgrel=1
 section='math'
 pkgdesc='High-level language for numerical computation and visualization'
@@ -20,7 +20,7 @@ source=("matlab_${release}_glnxa64.zip"
         'matlab.png'
         'matlab.desktop'
         'matlab-cli')
-sha256sums=('03211538445e8e98c85c358aca74f1627cca2f83e3b5cd5499ecfbc1c3ff3abb'
+sha256sums=('8cfcddd3878d3a69371c4e838773bcabf12aaf0362cc2e1ae7e8820845635cac'
             'ebb5397b28cedae0f59cbcba608570c2907c4d43f01b1cb5baa2fae1b512a6c4'
             '34fbca3d6bbeab0483055419b944fce1f1bcce3dc8c79d758eba83e0e8fdf16b'
             'ed586434a60af5b1cf9416ed36b1e3770b41650bd9912b0d26ae0f612d625ef0')
@@ -32,7 +32,7 @@ prepare() {
     bsdtar -xf "${srcdir}/matlab_${release}_glnxa64.zip" \
         -C "${srcdir}/installer"
     echo -e "\n\n\033[0;34m\033[1mInstall MATLAB ${release} to: \n\n${srcdir}/matlab\033[0m\n\n"
-    # "${srcdir}/installer/install" || exit 1
+    "${srcdir}/installer/install" || exit 1
 }
 
 package() {
@@ -58,7 +58,7 @@ package() {
 
     # Install .desktop
     install -Dm644 "${srcdir}/${pkgname}.desktop" \
-        "${pkgdir}/usr/share/applications/${pkgdir}.desktop"
+        "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
     # install icon
     install -Dm644 "${srcdir}/${pkgname}.png" \
