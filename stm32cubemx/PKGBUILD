@@ -1,0 +1,66 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Karsten Pufahl <contact <AT> karstenpufahl.de>
+
+pkgname=stm32cubemx
+pkgver=5.0.1
+pkgrel=1
+epoch=
+section='embedded'
+pkgdesc='Configuration tool for STM32 microcontrollers.'
+read -r -d '' pkglong <<"EOF"
+Graphical software configuration tool for STM32 microcontrollers that allows
+generating C initialization code.
+EOF
+arch=(any)
+url="https://www.st.com/content/st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-configurators-and-code-generators/stm32cubemx.html"
+license=('custom')
+groups=()
+depends=('default-jre | java-runtime'
+         'libc6>=2.4')
+makedepends=('imagemagick'
+             'unzip')
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+install=
+changelog=
+source=("https://www.st.com/resource/en/library2/stm32cube_mx_v${pkgver//./}.zip"
+        "LICENSE"
+        "stm32cubemx.desktop"
+        "stm32cubemx.sh")
+noextract=("stm32cube_mx_v${pkgver//./}.zip")
+sha512sums=('03fa6a42240786d65c6910458751d221c770a98cb4bca775fd53700958a1ce77823462edacc29b476a91d2f916ee94f6a58ee5fb083080552b0ee396532ca5c6'
+            'ad1897ea5234b712d726b5d3423f05f1c0c5a64e28354afe07dce7451563ae4492366cc252ca379b44793797be20011a66458431fd5453c18a7543ccb8df5397'
+            '56bff32e35f8eb09ae4df94e4e885aaf9349c687ce9f4901ddd11c83b69a32b19d99ab8dbd90c6679e86e7213c4d41640e52ab0d80b8fc4640a1bc5df9a3af32'
+            '5e039e61fa693cb4d53dde8e604aca579242f93d80658b65125a0214d5cc757b574b6c3195242d8e8a6111223a6908e40d7fc596860c847db6d3cb1c3fa27967')
+
+prepare() {
+
+    unzip -q "${srcdir}/stm32cube_mx_v${pkgver//./}.zip" -d "${srcdir}/${pkgname}"
+
+}
+
+package() {
+
+    # install license
+    install -Dm 644 "${srcdir}/LICENSE" "${docdir}/LICENSE"
+
+    # install application
+    install -dm755 "${pkgdir}/opt/stm/${pkgname}"
+    tar -C "${srcdir}/${pkgname}" -cf - \
+        . | tar -C "${pkgdir}/opt/stm/${pkgname}" -xf -
+
+    # install binary
+    install -Dm 755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+
+    # install icon
+    convert "${srcdir}/${pkgname}/help/STM32CubeMX.ico" "${srcdir}/${pkgname}.png"
+    install -Dm 644 "${srcdir}/${pkgname}-16.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+    # install shortcut
+    install -Dm 644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+}
