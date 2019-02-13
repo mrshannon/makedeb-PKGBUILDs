@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Atollic TrueSTUDIO for ARM
+Comment=Atollic TrueSTUDIO for ARM
+GenericName=TrueSTUDIO
+Exec=/opt/atollic/truestudio/ide/TrueSTUDIO %F
+Icon=/opt/atollic/truestudio/ide/TrueSTUDIO.ico
+Path=/opt/atollic/truestudio/ide/
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=Development

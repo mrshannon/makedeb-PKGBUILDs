@@ -1,0 +1,63 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Johannes Sjölund <j dot sjolund at gmail dot com>
+
+pkgname=truestudio
+pkgver=9.2.0
+pkgrel=1
+section='development'
+pkgdesc="Arm development and debugging IDE by Atollic."
+read -r -d '' pkglong <<"EOF"
+A flexible and extensible Arm development and debugging IDE by Atollic.
+EOF
+arch=('x86_64')
+url="https://atollic.com/truestudio/"
+license=(custom)
+depends=('default-jre | java-runtime' 'libusb-1.0-0' 'libncurses5' 'libwebkit2gtk-4.0-37')
+source=("http://download.atollic.com/TrueSTUDIO/installers/Atollic_TrueSTUDIO_for_STM32_linux_x86_64_v${pkgver}_20181203-0921.tar.gz"
+        "${pkgname}.desktop")
+sha256sums=('7488d87336d80d783df62a65e629c7eabfa003365520c9f99bc26489f66fc2a0'
+            'a33ae7950b3586717ab371eb51f58a7cb83b45ab925e37bac4e01affbffa3b18')
+
+prepare(){
+    msg2 'Unpacking TrueSTUDIO'
+    install -d -m755  "${srcdir}/${pkgname}"
+    tar xf "${srcdir}/Atollic_TrueSTUDIO_for_STM32_${pkgver}_installer/install.data" \
+        -C "${srcdir}/${pkgname}"
+}
+
+package() {
+    # install application
+    install -d -m755 "${pkgdir}/opt/atollic/${pkgname}"
+    cp -a "${srcdir}/${pkgname}/ARMTools" "${pkgdir}/opt/atollic/${pkgname}"
+    cp -a "${srcdir}/${pkgname}/PCTools" "${pkgdir}/opt/atollic/${pkgname}"
+    cp -a "${srcdir}/${pkgname}/Servers" "${pkgdir}/opt/atollic/${pkgname}"
+    cp -a "${srcdir}/${pkgname}/Tools" "${pkgdir}/opt/atollic/${pkgname}"
+    cp -a "${srcdir}/${pkgname}/ide" "${pkgdir}/opt/atollic/${pkgname}"
+
+    # install license
+    install -dm755 "${docdir}"
+    install -Dm644 "${srcdir}/Atollic_TrueSTUDIO_for_STM32_${pkgver}_installer/license.txt" \
+        "${docdir}/LICENSE"
+
+    # install udev rules
+    install -Dm644 "${srcdir}/${pkgname}/Servers/ST-LINK_gdbserver/49-stlinkv2-1.rules" \
+        "${pkgdir}/etc/udev/rules.d/49-stlinkv2-1.rules"
+    install -Dm644 "${srcdir}/${pkgname}/Servers/ST-LINK_gdbserver/49-stlinkv2.rules" \
+        "${pkgdir}/etc/udev/rules.d/49-stlinkv2.rules"
+
+    # install configuration
+    install -d -m755 "${pkgdir}/etc/atollic"
+    cat <<EOF > "${pkgdir}/etc/atollic/TrueSTUDIO_for_ARM_x86_64_${pkgver}.properties"
+# TrueSTUDIO for ARM properties for version ${pkgver}
+path=/opt/${pkgname}
+family=ARM
+arch=x86_64
+version=${pkgver}
+EOF
+
+    # install shortcut
+    install -d -m755 "${pkgdir}/usr/share/applications"
+    install -Dm644 "${srcdir}/${pkgname}.desktop" \
+        "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+}
