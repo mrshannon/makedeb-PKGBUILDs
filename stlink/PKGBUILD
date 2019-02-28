@@ -1,0 +1,49 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
+
+pkgname=stlink
+pkgver=1.5.1
+pkgrel=1
+pkgdesc='Firmware programmer for STM32 STLINK v1/v2 protocol'
+read -r -d '' pkglong <<"EOF"
+The ST-LINK/V2 is an in-circuit debugger and programmer for the STM8 and STM32
+microcontroller families. The single wire interface module (SWIM) and
+JTAG/serial wire debugging (SWD) interfaces are used to communicate with any
+STM8 or STM32 microcontroller located on an application board.
+EOF
+arch=('amd64')
+url='https://github.com/texane/stlink'
+license=(BSD)
+depends=('libusb-1.0-0' 'libc-bin')
+makedepends=('cmake' 'libgtk-3-dev' 'libusb-1.0-0-dev')
+install=stlink.install
+source=($pkgname-$pkgver.zip::https://github.com/texane/stlink/archive/v$pkgver.zip)
+sha256sums=('58674942a56fbfb59a0e6b0c16a79ee7a4643ff868250ee821311da2cb145385')
+
+build() {
+    mkdir "src/stlink-$pkgver/build"
+    cd "src/stlink-$pkgver/build"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
+        -DSTLINK_UDEV_RULES_DIR=/lib/udev/rules.d \
+        -DSTLINK_MODPROBED_DIR=/lib/modprobe.d ..
+    make
+}
+
+package() {
+    echo $PWD
+    cd "src/stlink-$pkgver/build"
+
+    # install package
+    make DESTDIR="$pkgdir" install
+    strip "$pkgdir/usr/bin/st-flash"
+    strip "$pkgdir/usr/bin/st-info"
+    strip "$pkgdir/usr/bin/st-util"
+    strip "$pkgdir/usr/bin/stlink-gui"
+    strip "$pkgdir/usr/lib/libstlink.so.1.5.1"
+
+    # install license
+    install -dm755 "${docdir}"
+    install -Dm644 "../LICENSE" "$docdir/LICENSE"
+
+    rm "$pkgdir/usr/lib/libstlink.a"
+}
