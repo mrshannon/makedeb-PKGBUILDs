@@ -1,0 +1,78 @@
+# Maintainer: Michael R. Shannon <mrshannon.aerospace@gmail.com>
+# Contributor: Kyle Keen <keenerd@gmail.com>
+
+
+nolint=1
+pkgname=saleae-logic
+pkgver=1.2.18
+pkgrel=1
+pkgdesc="High speed USB logic analyzer."
+read -r -d '' pkglong <<"EOF"
+High speed USB logic analyzer software from Saleae.
+EOF
+arch=('amd64')
+url="http://www.saleae.com/"
+license=('unknown')  # closed source, none given
+depends=('libc-bin' 'libgtk2.0-bin' 'libice6' 'libdbusmenu-qt5-2' 'openssl')
+
+source=("http://downloads.saleae.com/logic/$pkgver/Logic%20$pkgver%20(64-bit).zip"
+        "http://downloads.saleae.com/Logic%20Guide.pdf"
+        "http://kmkeen.com/tmp/133473-SaleaeLogic.svg"
+        "saleae-logic.desktop")
+md5sums=('8c586a272a89019540cc365c82ade451'
+         '836db7ec757b1e6453602ed4831d4765'
+         '96aac500508492509d8e47645a826af8'
+         '152b3de32853798950a7b4c1c1da2cf6')
+
+
+package() {
+
+    # install Saleae Logic
+    install -dm755 "${pkgdir}/opt/saleae/logic"
+    tar -C "${srcdir}/Logic ${pkgver} (64-bit)" -cf - . |
+        tar -C "${pkgdir}/opt/saleae/logic" -xf -
+
+    # fix library permissions
+    chmod -x "${pkgdir}/opt/saleae/logic/libAnalyzer.so"
+    chmod -x "${pkgdir}/opt/saleae/logic/libicudata.so.56"
+    chmod -x "${pkgdir}/opt/saleae/logic/libicui18n.so.56"
+    chmod -x "${pkgdir}/opt/saleae/logic/libicuuc.so.56"
+    chmod -x "${pkgdir}/opt/saleae/logic/libQt5Core.so.5"
+    chmod -x "${pkgdir}/opt/saleae/logic/libQt5DBus.so.5"
+    chmod -x "${pkgdir}/opt/saleae/logic/libQt5Gui.so.5"
+    chmod -x "${pkgdir}/opt/saleae/logic/libQt5Network.so.5"
+    chmod -x "${pkgdir}/opt/saleae/logic/libQt5Sql.so.5"
+    chmod -x "${pkgdir}/opt/saleae/logic/libQt5Widgets.so.5"
+    chmod -x "${pkgdir}/opt/saleae/logic/libQt5XcbQpa.so.5"
+
+    # saleae wants to write junk everywhere
+    touch "${pkgdir}/opt/saleae/logic/Settings/settings.xml"
+    chmod 0666 "${pkgdir}/opt/saleae/logic/Settings/settings.xml"
+    chmod 0777 "${pkgdir}/opt/saleae/logic"
+    chmod 0777 "${pkgdir}/opt/saleae/logic/Databases"
+
+    # install binary
+    install -dm755 "${pkgdir}/usr/bin/"
+    ln -s "/opt/saleae/logic/Logic" "${pkgdir}/usr/bin/${pkgname}"
+
+    # install .desktop
+    install -D -m644 "${srcdir}/saleae-logic.desktop" \
+        "$pkgdir/usr/share/applications/saleae-logic.desktop"
+
+    # install icon
+    install -Dm644 "${srcdir}/133473-SaleaeLogic.svg" \
+        "$pkgdir/usr/share/pixmaps/SaleaeLogic.svg"
+
+    # install docs
+    install -dm755 "${docdir}"
+    install -Dm644 "${srcdir}/Logic%20Guide.pdf" "${docdir}/"
+
+    # install udev rules
+    install -Dm644 \
+        "${srcdir}/Logic ${pkgver} (64-bit)/Drivers/99-SaleaeLogic.rules" \
+        ${pkgdir}/lib/udev/rules.d/99-SaleaeLogic.rules
+
+}
+
+
+
