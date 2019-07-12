@@ -4,7 +4,7 @@
 # Contributor: Matthew Bentley <matthew@mtbentley.us>
 
 pkgname=godot-export-templates
-pkgver=3.0.6
+pkgver=3.1.1
 pkgrel=1
 section='devel'
 pkgdesc="Export templates for the Godot game engine"
@@ -15,7 +15,7 @@ depends=('godot')
 source=(
   "https://downloads.tuxfamily.org/godotengine/${pkgver}/Godot_v${pkgver}-stable_export_templates.tpz"
 )
-sha256sums=('34177e64d69673023eca7a8c2eb005f257056045273b3e3a4418e32cf8103bf8')
+sha256sums=('537937f8737f7f3693037fefa08993c7c0fe2a70aeb44d53d3012abaefec2564')
 
 package() {
 
