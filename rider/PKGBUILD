@@ -3,7 +3,7 @@
 
 nolint=1
 pkgname=rider
-pkgver=2018.3.3
+pkgver=2019.1.3
 pkgrel=1
 pkgdesc='Cross-platform C# IDE by JetBrains'
 read -r -d '' pkglong <<"EOF"
@@ -19,7 +19,7 @@ provides=('rider')
 conflicts=('rider')
 source=("https://download.jetbrains.com/rider/JetBrains.Rider-${pkgver}.tar.gz"
         "jetbrains-${pkgname}.desktop")
-sha256sums=('5eb9d9e3fc26d092ec4a2d7df0582c237e212d2346f3afdd612d3e53e588c92e'
+sha256sums=('13ab4fb5ea8ddaf320c946f6c0ac65015367d3a45f71857b50fd8f4d33ea26c8'
             '23360ab0dc1976a0b3d59f473182ee57cf52852ad2d7c8e11ef96512e4650949')
 
 prepare() {
