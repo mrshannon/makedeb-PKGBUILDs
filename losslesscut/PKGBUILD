@@ -2,7 +2,7 @@
 # Contributor: Jose Riha <jose1711 gmail com>
 
 pkgname=losslesscut
-pkgver=2.1.0
+pkgver=2.3.0
 pkgrel=1
 section='video'
 pkgdesc="Cross platform GUI tool for lossless trimming/cutting of video/audio files"
@@ -53,7 +53,7 @@ makedepends=()
 source=("https://github.com/mifi/lossless-cut/releases/download/v${pkgver}/LosslessCut-linux-x64.zip" 
         'losslesscut.desktop'
         'icon.svg')
-sha256sums=('5b6fbeecccbc3ed780ed828376e8dca14507770f9f5e94c9e675e0dc42da19be'
+sha256sums=('fb4d84f4f37a02b905beba348d2830d666744dce399bc8e908464fec2ac139e2'
             'e91017634fe1e3685a6affd8d72c1ec11af4d390c9fc13d503ae67e8c6e4e852'
             'd3d3da3f403ce1b9f846ae2a38a8fe9938fc458024352a9741b59a920eefacf9')
 package()
