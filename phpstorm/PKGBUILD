@@ -8,8 +8,8 @@
 nolint=1
 _pkgname=PhpStorm
 pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
-pkgver=2019.2.2
-_pkgver=192.6603.42
+pkgver=2019.2.3
+_pkgver=192.6817.20
 pkgrel=1
 section='devel'
 pkgdesc='PHP IDE for Professional Development'
@@ -24,7 +24,7 @@ url='https://www.jetbrains.com/phpstorm/'
 depends=('default-jre | java-runtime')
 source=("https://download.jetbrains.com/webide/${_pkgname}-${pkgver}.tar.gz"
         'jetbrains-phpstorm.desktop')
-sha256sums=('f2ce084aef4d30850dd2b105f2ff2b8099bbd538da5d3dab43ae251f0043e3c9'
+sha256sums=('31ccc8bb0866c6633de3a12676529f6c08c9218f381fa6b7edac7fe62b042a5f'
             'aabe9170734fb04bb1cce27ac95b6ee69ed665be4d3ea87e5284ee69da6d9ea2')
 
 prepare() {
