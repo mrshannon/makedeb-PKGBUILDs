@@ -8,7 +8,7 @@
 # Contributor: David Davis < davisd<a@t>davisd.com >
 
 pkgname=yed
-pkgver=3.19
+pkgver=3.19.1.1
 pkgrel=1
 epoch=1
 section='graphics'
@@ -28,7 +28,7 @@ source=("https://www.yworks.com/resources/yed/demo/yEd-${pkgver}.zip"
         'https://www.yworks.com/assets/images/logos/y-flat.png'
         'yed.desktop'
         'yed')
-sha256sums=('1595816007ced156d21576691fe5247135d85d674231a708a49553de685c65e3'
+sha256sums=('3639da2650976bffcd43a8ea830727bae86478e95ceb4d68ad6363a42a8f1efb'
             '2b411ac39175cdf210900c033ad35063925fd17c10b7b4303fccb12b9398ac13'
             '342dba6defac88d035253b22e6377d9570858f59367cd486dba4a4dba1621f91'
             'dc193379e3bcc3976371a248a082b7f2a7cff610fcbc0064b12997edf5def66d')
