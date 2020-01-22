@@ -9,7 +9,7 @@
 nolint=1
 _pkgname=RubyMine
 pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
-pkgver=2019.3
+pkgver=2019.3.1
 pkgrel=1
 section='devel'
 pkgdesc="The Most Intelligent Ruby and Rails IDE"
@@ -27,7 +27,7 @@ depends=('default-jre | java-runtime' 'build-essential')
 optdepends=('ruby')
 source=("https://download.jetbrains.com/ruby/${_pkgname}-${pkgver}.tar.gz"
         "jetbrains-${pkgname}.desktop")
-sha256sums=('f268a08d92e57362410f5089b9151ada776198a21f49c1096df0b20b948c79f7'
+sha256sums=('dd75451cc447549c8b0428d2f4d7ac8f90839d851fbb41d79839b5af49974d75'
             'ec0723a345ff62902c1a08a7c44c3a5c6340af50fb3a454d297a97b5f313f695')
 
 prepare() {

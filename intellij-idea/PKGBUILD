@@ -3,7 +3,7 @@
 
 nolint=1
 pkgname=intellij-idea
-pkgver=2019.3
+pkgver=2019.3.1
 _buildver=193.5233.102
 pkgrel=1
 arch=('amd64')
@@ -24,7 +24,7 @@ license=('Commercial')
 depends=('default-jre | java-runtime')
 source=("https://download.jetbrains.com/idea/ideaIU-${pkgver}.tar.gz"
         "jetbrains-idea.desktop")
-sha256sums=('739b1eeb14587fa3fa7c3ceb14293c2773fbe355d12af977aee3a8803beab34b'
+sha256sums=('87543537c524c6f67c88e1e2af3865bb233099bf405db2df131a66ebf4655532'
             'c0fa5e94568fae54b07a1e57be5d7faf428a81cde02fd2a5cf72676223078967')
 
 prepare() {
