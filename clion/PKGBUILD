@@ -6,7 +6,7 @@
 nolint=1
 _pkgname=CLion
 pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
-pkgver=2019.3.2
+pkgver=2019.3.3
 pkgrel=1
 section='devel'
 pkgdesc="Cross-platform IDE for C and C++"
@@ -27,7 +27,7 @@ license=('custom')
 depends=('default-jre | java-runtime' 'build-essential')
 source=("https://download.jetbrains.com/cpp/${_pkgname}-${pkgver}.tar.gz"
         "jetbrains-${pkgname}.desktop")
-sha256sums=('31d2ed8927dd163a4b8ff8a46bf57ad585ba96ec1814838cb77d2d26448f7a2a'
+sha256sums=('3c12a827bedf5ecc0d6c9aaf6822bb849f53798e5fd48e3f7ef975b4aa5976b7'
             'b0e740ee04c2b3998652888e601f539b4024d561c1fb571d87ed86d42bbc052e')
 
 prepare() {
