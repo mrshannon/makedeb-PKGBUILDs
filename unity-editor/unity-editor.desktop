@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Unity
-Exec=unity-editor
-Icon=unity-editor
-Terminal=false
-Type=Application
-StartupNotify=true
-Categories=Development;IDE;Application;
-MimeType=x-scheme-handler/com.unity3d.kharma;
