@@ -4,7 +4,7 @@
 nolint=1
 _pkgname=DataGrip
 pkgname=$(echo "$_pkgname" | tr '[:upper:]' '[:lower:]')
-pkgver=2019.3.4
+pkgver=2020.1
 pkgrel=1
 section='devel'
 pkgdesc='IntelliJ-based IDE for databases and SQL'
@@ -22,7 +22,7 @@ license=('Commercial')
 depends=('default-jre | java-runtime')
 source=("https://download.jetbrains.com/${pkgname}/${pkgname}-${pkgver}.tar.gz"
         'jetbrains-datagrip.desktop')
-sha256sums=('6409a7ed5b91d4b54adc03bb784e86ecde035b0c256aad66ab463d2d8288ebf9'
+sha256sums=('3d7e8a65644773548b3c26ab83529f03a995d10326ab67e1aab68febd2d76afc'
             '12ffc941fc4fd64c84d4cb925c7de370241caa9de303177be4283e27574261ef')
 
 prepare() {

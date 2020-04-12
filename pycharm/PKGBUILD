@@ -3,7 +3,7 @@
 
 nolint=1
 pkgname=pycharm
-pkgver=2019.3.4
+pkgver=2020.1
 pkgrel=1
 section='devel'
 pkgdesc="Python IDE for Professional Developers"
@@ -34,7 +34,7 @@ optdepends=('ipython'
             'jupyter')
 source=("https://download.jetbrains.com/python/${pkgname}-professional-${pkgver}.tar.gz"
         'jetbrains-pycharm.desktop')
-sha256sums=('5f5951f415c82a337b035433f2444bbd04491faa89e3a9f1154d7d6ce0fcbcc1'
+sha256sums=('8263bb3707de2eaf88b689cf19667dc24508da40418b7fb00ad1280d1d168deb'
             'bf2250e1ce06cddb8deec31a51e8197c87adbf62462318cd288077554c39fa09')
 
 prepare() {
